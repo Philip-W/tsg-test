@@ -51,7 +51,6 @@ describe('Packet', function() {
           
       
         let outcome = new Packet(outcomeString).toJson()
-        //console.log(outcome)
         assert.deepEqual(outcome, expectedMarketObject);
     });
 
@@ -104,11 +103,6 @@ describe('Packet', function() {
           
       
         let outcome = new Packet(outcomeString).toJson()
-        //console.log(outcome)
         assert.deepEqual(outcome, expectedMarketObject);
     });
 });
-
-// |40|create|market|1579515914230|ff84e1b2-f224-4e51-9556-3f8f54324ba7|e7ca6259-ea78-4b83-9f22-70c8d92d0a18|Full Time Result|0|1|
-// |41|create|outcome|1579515914230|e7ca6259-ea78-4b83-9f22-70c8d92d0a18|d50bb0e4-70d8-418e-a16f-aa5e949b256d|\|Peterborough\||2/5|0|1|
-// |42|create|outcome|1579515914230|e7ca6259-ea78-4b83-9f22-70c8d92d0a18|d002b0f7-6ae9-4e7d-9209-0ed527e4b5f8|Draw|11/10|0|1|

@@ -1,4 +1,4 @@
-let DataTypes = require('./dataTypes')
+let DataTypes = require('./DataTypes')
 let Header = DataTypes.Header;
 let Event = DataTypes.Event;
 let Market = DataTypes.Market;
@@ -18,16 +18,16 @@ class Packet {
 
         switch (header.type){
             case 'event':
-                console.log(new Event(header, body))
+                return new Event(header, body);
                 break;
             case 'market':
-                console.log(new Market(header, body))
+                return new Market(header, body);
                 break;
             case 'outcome':
-                console.log(new Outcome(header, body))
-                break
+                return new Outcome(header, body);
+                break;
             default:
-                console.warn ('Failed to parse')
+                console.warn ('Failed to parse');
         }
     }
 }

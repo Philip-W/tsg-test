@@ -16,8 +16,9 @@ class TCPConsumer {
     parsePacketBlock(packetBlock) {
         var rawPackets = packetBlock.toString().split(newLineMatcher).filter(packet => packet.length > 0) // Remove end of message lines 
         rawPackets.forEach(function(rawPacket) {
-            var packet = new Packet(rawPacket);
-            packet.toJson();
+            //var packet = new Packet(rawPacket);
+            //packet.toJson();
+            console.log(rawPacket)
         })
     }
 

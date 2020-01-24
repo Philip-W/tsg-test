@@ -1,23 +1,23 @@
 let net = require('net');
-let Packet = require('./Packet').Packet;
-
-const newLineMatcher = /\r?\n/;
+let parseStringToJSON = require('./PacketHandling/RawPacketProcessing').parseStringToJSON;
+let parsePacketBlockIntoList = require('./PacketHandling/RawPacketProcessing').parsePacketBlockIntoList;
 
 class TCPConsumer {
 
-    constructor(host = '127.0.0.1', port = 8282) {
+    constructor(host = '127.0.0.1', port = 8282, queue) {
         this.port = port;
         this.host = host;
+        this.queue = queue;
         this.client = new net.Socket();
-        this.client.on('data', packetBlock => this.parsePacketBlock(packetBlock));
+        this.client.on('data', packetBlock => this.handlePackets(packetBlock));
         this.client.on('close', () => {console.log('Connection closed')})
     }
 
-    parsePacketBlock(packetBlock) {
-        var rawPackets = packetBlock.toString().split(newLineMatcher).filter(packet => packet.length > 0) // Remove end of message lines 
-        rawPackets.forEach(function(rawPacket) {
-            var packet = new Packet(rawPacket);
-            console.log(packet.toJson());
+    handlePackets(packetBlock) {
+        var rawPacketList = parsePacketBlockIntoList(packetBlock);
+        rawPacketList.forEach((rawPacket) =>  {
+            var parsedJsonAsString = JSON.stringify(parseStringToJSON(rawPacket));
+            this.queue.publishMessageToQueue(parsedJsonAsString);
         })
     }
 

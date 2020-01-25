@@ -16,7 +16,9 @@ class TCPConsumer {
     handlePackets(packetBlock) {
         var rawPacketList = parsePacketBlockIntoList(packetBlock);
         rawPacketList.forEach((rawPacket) =>  {
-            var parsedJsonAsString = JSON.stringify(parseStringToJSON(rawPacket));
+            var messageAsJson = parseStringToJSON(rawPacket)
+            console.log(`Sending message with ID to queue: ${messageAsJson.header.msgId}`)
+            var parsedJsonAsString = JSON.stringify(messageAsJson);
             this.queue.publishMessageToQueue(parsedJsonAsString);
         })
     }

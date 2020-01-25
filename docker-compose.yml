@@ -17,7 +17,7 @@ services:
    environment:
      KAFKA_ADVERTISED_HOST_NAME: 'localhost' # eg: HOST_IP_ADDR=$(ipconfig getifaddr en0) docker-compose up
      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-     KAFKA_CREATE_TOPICS: "dev.betting:1:1"
+     KAFKA_CREATE_TOPICS: "dev.betting:1:1" 
    volumes:
      - /var/run/docker.sock:/var/run/docker.sock
    depends_on:
@@ -38,3 +38,19 @@ services:
       ports:
         - "8181:8181"
         - "8282:8282"
+
+# write_to_no_sql:
+#   build: ./writeDataToNoSQL
+#   depends_on: 
+#     - kafka
+#     - mongo
+#   environment:
+#     -
+# tcp_consumer:
+#   build: ./tcp_consumer
+#   depends_on:
+#     - kafka
+#     - mongo
+#     - write_to_no_sql
+#   environment:
+

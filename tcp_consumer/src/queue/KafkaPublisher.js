@@ -14,7 +14,7 @@ class KafkaPublisher {
 
     publishMessageToQueue(message) {
         this.producer.send([{ topic: this.topic, messages: [message] }], function (err, result) {
-            console.log(err || result);
+            if (err){ console.warn(err) }
         });
     }
 }

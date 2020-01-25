@@ -1,11 +1,10 @@
-var mongoose = require('mongoose');
+var OutcomeModel = require('../MongoDBModels/OutcomeModel').OutcomeModel;
 var EventModel = require('../MongoDBModels/EventModel').EventModel;
 
 
-let writeOutcomeToStore = function(outcomeData){
-  console.log('write outcome')
+let writeOutcomeToStore = function(outcomeData) {
   let outcomeModelInstance = new OutcomeModel({
-    outcome:{
+    outcome: {
       header: {
         msgId: outcomeData.header.msgId,
         operation: outcomeData.header.operation,

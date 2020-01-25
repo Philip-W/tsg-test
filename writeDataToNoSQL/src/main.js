@@ -1,11 +1,14 @@
-var EventActions = require('./MongoDBActions/EventActions').EventActions;
-var MarketActions = require('./MongoDBActions/MarketActions').MarketActions;
-var OutcomeActions = require('./MongoDBActions/OutcomeActions').OutcomeActions;
+var EventActions = require('./MongoDBActions/EventActions');
+var MarketActions = require('./MongoDBActions/MarketActions');
+var OutcomeActions = require('./MongoDBActions/OutcomeActions');
+var config = require('../config').config;
+var mongoose = require('mongoose');
+
 
 var kafka = require('kafka-node');
 var Consumer = kafka.Consumer;
 var Client = kafka.KafkaClient;
-var topic = 'dev.betting'; // config
+var topic = config.kafka_topic;
 
 var topics = [{ topic: topic, partition: 0 }];
 var options = { 
@@ -17,7 +20,8 @@ var options = {
 
 
 let storeMessageInDB = function(message) {
-  var parsedMessage = JSON.parse(message.value)
+  var parsedMessage = JSON.parse(message.value);
+  console.log(`Attemping to store message with ID: ${parsedMessage.header.msgId}`)
     switch(parsedMessage.header.type){
       case 'event':
           EventActions.writeEventToStore(parsedMessage);
@@ -34,13 +38,11 @@ let storeMessageInDB = function(message) {
 }
 
 
-var client = new Client('localhost:2181'); // config
+mongoose.connect('localhost:27017/test', {useNewUrlParser: true})
 
+var client = new Client(config.kafka_address);
 client.on('ready', function () { console.log('client ready!') })
 
 var consumer = new Consumer(client, topics, options);
-
 consumer.on('message', message => storeMessageInDB(message));
-
 consumer.on('error', function (err) { console.log('error', err) });
-

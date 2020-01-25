@@ -21,7 +21,7 @@ var options = {
 
 let storeMessageInDB = function(message) {
   var parsedMessage = JSON.parse(message.value);
-  console.log(`Attemping to store message with ID: ${parsedMessage.header.msgId}`)
+  console.log(`Attemping to store message with ID: ${parsedMessage.header.msgId}`);
     switch(parsedMessage.header.type){
       case 'event':
           EventActions.writeEventToStore(parsedMessage);
@@ -38,11 +38,18 @@ let storeMessageInDB = function(message) {
 }
 
 
-mongoose.connect('localhost:27017/test', {useNewUrlParser: true})
+mongoose.connect(
+    `${config.mongo_host}:${config.mongo_port}/${config.mongo_table}`,
+    {useNewUrlParser: true}
+);
 
+setTimeout(() => {
+    console.log("Attempting Kafka connection:", config.kafka_address);
 var client = new Client(config.kafka_address);
-client.on('ready', function () { console.log('client ready!') })
+client.on('ready', function () { console.log('client ready!') });
 
 var consumer = new Consumer(client, topics, options);
 consumer.on('message', message => storeMessageInDB(message));
 consumer.on('error', function (err) { console.log('error', err) });
+
+}, 20000);

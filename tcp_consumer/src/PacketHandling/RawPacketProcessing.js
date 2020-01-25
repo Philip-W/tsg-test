@@ -6,7 +6,6 @@ let Outcome = require('../DataTypes/Outcome').Outcome;
 const newLineMatcher = /\r?\n/;
 const pipeMatcherWithEscapeExclusion = /(\\.|[^\|])+/g;
 
-
 var parsePacketBlockIntoList = function(packetBlock) {
   // Splits the block on new line characters and clears any empty packets
   return packetBlock.toString().split(newLineMatcher).filter(packet => packet.length > 0);

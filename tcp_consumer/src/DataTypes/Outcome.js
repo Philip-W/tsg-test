@@ -1,4 +1,3 @@
-
 class Outcome {
   constructor(header, body){
     if (header.type !== 'outcome') {

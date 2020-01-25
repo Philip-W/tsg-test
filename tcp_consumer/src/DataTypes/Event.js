@@ -1,5 +1,3 @@
-
-
 class Event {
   constructor(header, body) {
     if (header.type !== 'event') {

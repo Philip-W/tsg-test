@@ -1,7 +1,6 @@
 var OutcomeModel = require('../MongoDBModels/OutcomeModel').OutcomeModel;
 var EventModel = require('../MongoDBModels/EventModel').EventModel;
 
-
 let writeOutcomeToStore = function(outcomeData) {
   let outcomeModelInstance = new OutcomeModel({
     outcome: {

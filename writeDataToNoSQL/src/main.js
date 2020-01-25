@@ -38,18 +38,18 @@ let storeMessageInDB = function(message) {
 };
 
 
+
 mongoose.connect(
-  `${config.mongo_host}:${config.mongo_port}/${config.mongo_table}`,
-  {useNewUrlParser: true},
+    `${config.mongo_host}:${config.mongo_port}/${config.mongo_table}`,
+    {useNewUrlParser: true}
 );
 
-setTimeout(() => {
-  console.log('Attempting Kafka connection:', config.kafka_address);
-  var client = new Client(config.kafka_address);
-  client.on('ready', function() { console.log('client ready!'); });
 
-  var consumer = new Consumer(client, topics, options);
-  consumer.on('message', message => storeMessageInDB(message));
-  consumer.on('error', function(err) { console.log('error', err); });
+console.log("Attempting Kafka connection:", config.kafka_address);
+var client = new Client();
+client.on('ready', function () { console.log('client ready!') });
 
-}, 20000);
+var consumer = new Consumer(client, topics, options);
+consumer.on('message', message => storeMessageInDB(message));
+consumer.on('error', function (err) { console.log('error', err) });
+

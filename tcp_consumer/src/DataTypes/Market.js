@@ -1,4 +1,3 @@
-
 class Market {
   constructor(header, body) {
     if (header.type !== 'market') {

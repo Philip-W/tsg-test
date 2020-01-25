@@ -1,6 +1,5 @@
 var EventModel = require('../MongoDBModels/EventModel').EventModel;
 
-
 let writeEventToStore = function(eventData) {
   let eventModelInstance = new EventModel({
     event: {

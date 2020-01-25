@@ -4,32 +4,32 @@ let parsePacketBlockIntoList = require('./PacketHandling/RawPacketProcessing').p
 
 class TCPConsumer {
 
-    constructor(host = '127.0.0.1', port = 8282, queue) {
-        this.port = port;
-        this.host = host;
-        this.queue = queue;
-        this.client = new net.Socket();
-        this.client.on('data', packetBlock => this.handlePackets(packetBlock));
-        this.client.on('close', () => {console.log('Connection closed')})
-    }
+  constructor(host = '127.0.0.1', port = 8282, queue) {
+    this.port = port;
+    this.host = host;
+    this.queue = queue;
+    this.client = new net.Socket();
+    this.client.on('data', packetBlock => this.handlePackets(packetBlock));
+    this.client.on('close', () => { console.log('Connection closed'); });
+  }
 
-    handlePackets(packetBlock) {
-        var rawPacketList = parsePacketBlockIntoList(packetBlock);
-        rawPacketList.forEach((rawPacket) =>  {
-            var messageAsJson = parseStringToJSON(rawPacket)
-            console.log(`Sending message with ID to queue: ${messageAsJson.header.msgId}`)
-            var parsedJsonAsString = JSON.stringify(messageAsJson);
-            this.queue.publishMessageToQueue(parsedJsonAsString);
-        })
-    }
+  handlePackets(packetBlock) {
+    var rawPacketList = parsePacketBlockIntoList(packetBlock);
+    rawPacketList.forEach((rawPacket) => {
+      var messageAsJson = parseStringToJSON(rawPacket);
+      console.log(`Sending message with ID to queue: ${messageAsJson.header.msgId}`);
+      var parsedJsonAsString = JSON.stringify(messageAsJson);
+      this.queue.publishMessageToQueue(parsedJsonAsString);
+    });
+  }
 
-    startReceivingPackets() {
-        this.client.connect(this.port, this.host, function() {
-            console.log('Connected');
-        });
-    }
+  startReceivingPackets() {
+    this.client.connect(this.port, this.host, function() {
+      console.log('Connected');
+    });
+  }
 }
 
 module.exports = {
-    TCPConsumer
-}
+  TCPConsumer,
+};

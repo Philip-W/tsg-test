@@ -8,23 +8,23 @@ let writeMarketToStore = function(marketData) {
         msgId: marketData.header.msgId,
         operation: marketData.header.operation,
         type: marketData.header.type,
-        timestamp: marketData.header.timestamp
+        timestamp: marketData.header.timestamp,
       },
       body: {
         eventId: marketData.body.eventId,
         marketId: marketData.body.marketId,
         name: marketData.body.name,
         displayed: marketData.body.displayed,
-        suspended: marketData.body.suspended
-      }
-    }
+        suspended: marketData.body.suspended,
+      },
+    },
   });
 
   EventModel.updateOne(
     {'event.body.eventId': marketData.body.eventId},
-    {$push: {markets: marketModelInstance}}
-  ).exec()
-}
+    {$push: {markets: marketModelInstance}},
+  ).exec();
+};
 
 
-module.exports = { writeMarketToStore }
+module.exports = { writeMarketToStore };

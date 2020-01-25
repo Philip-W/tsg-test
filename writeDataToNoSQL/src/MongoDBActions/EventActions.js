@@ -1,4 +1,3 @@
-var mongoose = require('mongoose');
 var EventModel = require('../MongoDBModels/EventModel').EventModel;
 
 
@@ -9,7 +8,7 @@ let writeEventToStore = function(eventData) {
         msgId: eventData.header.msgId,
         operation: eventData.header.operation,
         type: eventData.header.type,
-        timestamp: eventData.header.timestamp
+        timestamp: eventData.header.timestamp,
       },
       body: {
         eventId: eventData.body.eventId,
@@ -18,11 +17,11 @@ let writeEventToStore = function(eventData) {
         name: eventData.body.name,
         startTime: eventData.body.startTime,
         displayed: eventData.body.displayed,
-        suspended: eventData.body.suspended
-      }
-    }
+        suspended: eventData.body.suspended,
+      },
+    },
   });
- eventModelInstance.save();
-}
+  eventModelInstance.save();
+};
 
-module.exports = { writeEventToStore }
+module.exports = { writeEventToStore };

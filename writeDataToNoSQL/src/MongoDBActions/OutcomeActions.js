@@ -9,7 +9,7 @@ let writeOutcomeToStore = function(outcomeData) {
         msgId: outcomeData.header.msgId,
         operation: outcomeData.header.operation,
         type: outcomeData.header.type,
-        timestamp: outcomeData.header.timestamp
+        timestamp: outcomeData.header.timestamp,
       },
       body: {
         marketId: outcomeData.body.marketId,
@@ -17,16 +17,16 @@ let writeOutcomeToStore = function(outcomeData) {
         name: outcomeData.body.name,
         price: outcomeData.body.price,
         displayed: outcomeData.body.displayed,
-        suspended: outcomeData.body.suspended
-      }
-    }
+        suspended: outcomeData.body.suspended,
+      },
+    },
   });
 
   EventModel.updateOne(
     {markets: {$elemMatch: {'market.body.marketId': outcomeData.body.marketId}}},
     {$push: {'markets.$.outcomes': outcomeModelInstance}},
-    ).exec()
-}
+  ).exec();
+};
 
 
-module.exports = { writeOutcomeToStore }
+module.exports = { writeOutcomeToStore };

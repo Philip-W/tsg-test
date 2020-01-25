@@ -8,19 +8,19 @@ var MarketSchema = new Schema({
       msgId: Number,
       operation: String,
       type: {type: String},
-      timestamp: Number
+      timestamp: Number,
     },
     body: {
-      eventId: String, 
-      marketId: String, 
-      name: String, 
+      eventId: String,
+      marketId: String,
+      name: String,
       displayed: Boolean,
-      suspended: Boolean
-    }
+      suspended: Boolean,
+    },
   },
-  outcomes: [OutcomeSchema]
-})
+  outcomes: [OutcomeSchema],
+});
 
 var MarketModel = mongoose.model('Market', MarketSchema);
 
-module.exports = { MarketModel, MarketSchema }
+module.exports = { MarketModel, MarketSchema };

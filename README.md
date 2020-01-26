@@ -33,4 +33,6 @@ Testing of this application was limited to unit tests of the message parsing. Wi
 ## Running the application
 The services must currently be started independent of the docker-compose command, using `npm install` and `npm start` within both the `tcpConsumer` and `writeDataToNoSQL` directories. Configuration files are provided in the top level directory of each service, the config defaults point to the service instances provided by the docker-compose file. The tests for `tcpConsumer` can be run using `npm test` following the install command.
 
-Both the full application and unit tests were written on a windows development machine and I had the chance to test it on mac which executed as expected.
+Both the full application and unit tests were written on a windows development machine and I had the chance to test it on mac which executed as expected. 
+For the unit testing mocha was used, and to verify the data was being written to the MongoDB store correctly I used Mongoku - an app which can be installed 
+with npm and run to view the MongoDB contents in a browser.

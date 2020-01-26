@@ -7,7 +7,7 @@ const newLineMatcher = /\r?\n/;
 const pipeMatcherWithEscapeExclusion = /(\\.|[^\|])+/g;
 
 var parsePacketBlockIntoList = function(packetBlock) {
-  // Splits the block on new line characters and clears any empty packets
+  // Splits the block on new line characters and clears any empty packets created from the split
   return packetBlock.toString().split(newLineMatcher).filter(packet => packet.length > 0);
 };
 

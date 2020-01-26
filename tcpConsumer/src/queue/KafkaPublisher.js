@@ -3,9 +3,9 @@ var Producer = kafka.Producer;
 var Client = kafka.KafkaClient;
 
 class KafkaPublisher {
-  constructor(){
-    var client = new Client({kafka_server: 'localhost:9092'}); // config
-    this.topic = 'dev.betting'; // config
+  constructor(kafka_server_address, topic){
+    var client = new Client({kafka_server: kafka_server_address});
+    this.topic = topic; 
 
     this.producer = new Producer(client, { requireAcks: 1 });
     this.producer.on('error', function(err) { console.log('error', err); });

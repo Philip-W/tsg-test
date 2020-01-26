@@ -3,9 +3,9 @@ var MarketActions = require('./MongoDBActions/MarketActions');
 var OutcomeActions = require('./MongoDBActions/OutcomeActions');
 var config = require('../config').config;
 var mongoose = require('mongoose');
-
-
 var kafka = require('kafka-node');
+
+
 var Consumer = kafka.Consumer;
 var Client = kafka.KafkaClient;
 var topic = config.kafka_topic;
@@ -36,7 +36,6 @@ let storeMessageInDB = function(message) {
       console.warn('Failed publish write message to store');
   }
 };
-
 
 
 mongoose.connect(

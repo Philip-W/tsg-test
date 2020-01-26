@@ -1,59 +1,37 @@
-# FeedMe Tech Test
+# Technical Test Solution
 
-The FeedMe tech test comes with a mock data feed service that represents one of the many types of data feeds we have to process everyday at The Stars Group.
+## Tasks Completed
+As a part of my solution I completed the Basic, Intermediate and some of the Advanced Tasks. In it's current state
+there are 2 applications, one to read the TCP stream, parse the JSON and write it to Kafka, and one service that consumes data from Kafka and pushes that data into a MongoDB store.
 
-The challenge is to consume and transform the proprietary mock data. The proprietary data format will need to be parsed and enriched with the relevant field names and data types. For more information about the feed please read the provider README: https://hub.docker.com/r/tsgtechtest/provider/
+Docker files have been setup to create images for these services however there was an issue getting the services to 
+connect to the kafka instance within the docker network using docker compose. Prior to this task I had
+not used Kafka before so given additional time I believe I would 
+have been able to solve this issue and provide a basic API to display some of the database. My intention for the front
+end would have involved 2 additional services, a database read service provided via a get request using Express, and a simple front end javascript application, likely build in React.
 
-## Tasks
+## Technical Choices
+For this task I chose to use Node.js, following the tasks suggested I broke the application into two services, 
+`tcpConsumer` and `writeDataToNoSQL`, doing as suggested where `tcpConsumer` is responsible for reading from the 
+provided TCP stream and parsing the packets into JSON before publishing the objects to a Kafka topic. 
 
-We realise everyone has different levels of skill and experience when it comes to development so we have listed different levels of tasks below for you to choose from. If you do not have the time or the knowledge to complete them all then that's ok, we just want to see how you approach the problem and get a feel for how you code.
+For the `writeDataToNoSQL` service I chose to use Mongoose to interface with a MongoDB instance. before this 
+task I had brief experience with other libraries for interfacing with MongoDB with node but thought Mongoose
+would provide a neat interface for handling the data hierachy.
 
-#### Basic Tasks
-* Create an app that connects the provider service on the exposed TCP port
-* Transform the proprietary data format into JSON using the field names and data types defined in the provider /types endpoint
-* Write unit tests
+Finally throughout the development process I tried to keep in mind extension of the software, for example for the `TCPConsumer` class, the queue was passed as a dependency to ensure the consumer wasn't too tightly coupled to a particular queue. This would allow for the easy extension of the tcpConsumer app to use different event processing services such as RabbitMQ.
 
-#### Intermediate Tasks
-* Save the JSON into a NoSQL store with a document per fixture. Each document should contain the event data and the child markets and outcomes for the fixture
+## Extensions 
+Given additional time I had a few thoughts on how I would like to extend the application.
 
-#### Advanced Tasks
-Imagine that your app has been in use for a while now but the company has decided to start offering more fixtures. This has massively increased the number of packets being received and you have noticed that your NoSQL writes have become a bottleneck causing a packet latency that is too high for your real time data needs.
+### Docker/Multple write instances
+As mentioned I completed part of the Advanced task, using Kafka as a event queue between the reads and writes, however I didn't have the time to test this application with multiple instances of the `writeDataToNoSQL` service. On brief investigation I believe this could lead to a race condition due to the short time span between creation of Events and Markets, and attempted writes of Markets into events and Outcomes into Markets. One possible solution to this is simply to 
+attempt retries of writes if a Market/Outcome fail due to not finding their parent. 
 
-Separating the responsibility of transforming to JSON and writing to NoSQL into separate apps should help remove the bottleneck and therefore reduce the packet latency. To facilitate doing this you will need to work out a sensible way of sharding / partitioning the JSON packets by implementing the use of a message queue service such as RabbitMQ or Kafka.
+Given additional time I believe I could have solved the issue with docker-compose I mentioned earlier, allowing for easy creation of multiple write services, and implemented the above suggestion to allow for performant writes. 
 
-With that context in mind:
+### Test Enhancements
+Testing of this application was limited to the messages parsing, with applications of this nature I find unit testing whereby the services are mocked to lead to poor test confidence. Given additional time I believe it would be valuable to include integration/component tests where the TCP stream input is controlled and asserting the contents is correctly written to the store. 
 
-* Implement a way of sharding / partitioning the transformed JSON packets via one or more message queues
-* Utilising the message queue(s) move your NoSQL logic into another app that can be run multiple times to enable concurrent NoSQL writes
-
-#### Additional Tasks
-* Implement a front end that displays the hierarchical NoSQL data.
-* Create a Dockerfile for your app(s)
-
-## Languages
-
-We use a mixture of coding languages at The Stars Group but for data consumption we mainly use Java (Kotlin) and Node. For this tech test we recommend you use either Java or NodeJS, but if you don't know either or you can show off your skills better in another language then please do so.
-
-## Getting Started
-
-* Install Docker and Docker Compose: https://docs.docker.com/compose
-* Start the mock data feed by typing `docker-compose up` in the root of the test directory
-* Test mock feed API by opening a browser and navigating to http://localhost:8181/types
-* Test mock feed by opening a new terminal and typing `telnet localhost 8282`. You should see a stream of packets.
-* If the tests above succeed then you are ready to start coding. If you decide to attempt the Intermediate and Advanced tasks then we suggest adding to or using the services listed in the docker-compose.yml file
-* To destroy the test environment you can type `docker-compose down`
-
-## The Deliverable
-
-Replace the contents of this README.md with:
-
-  1. A covering note explaining the technology choices you have made.
-  1. Any instructions required to run your solution and tests in a Linux environment.
-
-Email as an attachment or a link the git bundled repository showing your commit history with all your commits on the master branch:
-
-        git bundle create <anything>.bundle --all
-
-## Equality & Diversity
-
-We consider all candidates equally, fairly and without bias.  To that end, we ask that you do not leave any personally identifying information in your submission (such as your name within an author field or file, or in use as test data).  We run all VCS-based submissions through an anonymiser before assessment, so that there is no identifying information in the commit history, but this will only remove references in the committing author and email address, not deep in the code submitted.
+## Running the application
+The services must currently be started independent of the docker-compose command, using `npm install` and `npm start` within both the `tcpConsumer` and `writeDataToNoSQL` directories. Configuration files are provided in the top level directory of each service, the config defaults have been tested on a windows development machine and point to the service instances provided by the docker-compose file. The tests for `tcpConsumer` can be run using `npm test` following the install command.
